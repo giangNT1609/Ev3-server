@@ -3,9 +3,10 @@
 Description:
 
 simple EV3-server for controlling the EV3-device
+
 - Server will connect to a MQTT borker like (HiveMQ)
 
-- Program code for ev3 in folder: ev3-device 
+- Program code for ev3-robot in folder: ev3-device 
 
 - Database using Mongodb
 
