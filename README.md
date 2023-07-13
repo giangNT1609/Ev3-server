@@ -13,7 +13,7 @@ simple EV3-server for controlling the EV3-device
 - For device notification, We use Firebase Cloud Messaging so **comment** this code in the App module and mqtt.service.ts if not using or adding adminsdk json file in the root folder
 
 System architecture:
-![Alt text](file:///home/giangnt1609/Documents/system_architechture.drawio_4.png)
+![Alt text](https://github.com/giangNT1609/Ev3-server/blob/main/images/system_architechture.drawio_4.png)
 
 
 
