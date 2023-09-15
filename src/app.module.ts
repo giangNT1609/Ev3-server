@@ -27,12 +27,12 @@ import path from 'path';
     UserModule,
     ScheduleTaskModule,
     ScheduleModule.forRoot(),
-    FcmModule.forRoot({
-      firebaseSpecsPath: path.join(
-        __dirname,
-        '../gobot-f7630-firebase-adminsdk.json',
-      ),
-    }),
+    // FcmModule.forRoot({
+    //   firebaseSpecsPath: path.join(
+    //     __dirname,
+    //     '../gobot-f7630-firebase-adminsdk.json',
+    //   ),
+    // }),
   ],
   controllers: [AppController],
   providers: [AppService],
