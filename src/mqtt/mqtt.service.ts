@@ -4,8 +4,8 @@ import * as mqtt from 'mqtt';
 import { Devices, DevicesDocument } from './schema/device.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-// import { FcmService } from '@doracoder/fcm-nestjs';
-// import { messaging } from 'firebase-admin';
+import { FcmService } from '@doracoder/fcm-nestjs';
+import { messaging } from 'firebase-admin';
 import { UserService } from 'src/user/user.service';
 
 @Injectable()
@@ -13,11 +13,11 @@ export class MqttService {
   private readonly client: mqtt.MqttClient;
   constructor(
     private configService: ConfigService,
-    // private readonly fcmService: FcmService,
+    private readonly fcmService: FcmService,
     @InjectModel(Devices.name) private readonly model: Model<DevicesDocument>,
     private readonly userService: UserService,
   ) {
-    // this.fcmService = fcmService;
+    this.fcmService = fcmService;
     this.configService = configService;
     const brokerUrl = this.configService.get<string>('MQTT_URL');
     this.client = mqtt.connect(brokerUrl);
@@ -40,11 +40,11 @@ export class MqttService {
       console.log(`Received message from topic "${topic}": ${message}`);
       if (message.toString() == 'task completed') {
         const device = await this.getDevice(topic);
-        // await this.sendToDevices('Task completed', device.currentUser);
+        await this.sendToDevices('Task completed', device.currentUser);
       }
       if (message.toString() == 'Object detected') {
         const device = await this.getDevice(topic);
-        // await this.sendToDevices('Object detected', device.currentUser);
+        await this.sendToDevices('Object detected', device.currentUser);
       }
     });
   }
@@ -134,19 +134,19 @@ export class MqttService {
     }
   }
 
-  // async sendToDevices(message: string, username: string) {
-  //   const mobileId = await this.userService.getDeviceId(username);
-  //   const payload: messaging.MessagingPayload = {
-  //     notification: {
-  //       title: 'New Message',
-  //       body: 'You have a new message!',
-  //     },
-  //     data: {
-  //       type: 'message',
-  //       sender: username,
-  //       message: message,
-  //     },
-  //   };
-  //   return await this.fcmService.sendNotification([mobileId], payload, false);
-  // }
+  async sendToDevices(message: string, username: string) {
+    const mobileId = await this.userService.getDeviceId(username);
+    const payload: messaging.MessagingPayload = {
+      notification: {
+        title: 'New Message',
+        body: 'You have a new message!',
+      },
+      data: {
+        type: 'message',
+        sender: username,
+        message: message,
+      },
+    };
+    return await this.fcmService.sendNotification([mobileId], payload, false);
+  }
 }
